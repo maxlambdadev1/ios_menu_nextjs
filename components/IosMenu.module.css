@@ -1,0 +1,154 @@
+.root {  
+    --scale-amount: 0.96;
+    --item-height: 45px;
+    --ease-in-out-quad : cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    --ease-out-quad : cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-out: 320ms var(--ease-in-out-quad);
+    --transition-in: 320ms var(--ease-out-quad);
+    --transition: var(--transition-out);
+    color: #fff;
+    position: relative;
+    border-radius: 10px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition);  
+}
+.root > .item:first-child {    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.root > .item:last-child {    
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.root .item {   
+    height: var(--item-height);
+    background: #272727;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center; 
+}
+.indicator {    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 11px;
+    margin-right: 11px;
+    min-width: 16px;
+    min-height: 16px;
+}
+.item .label {    
+    color: #fff;
+    font-size: 17px;
+    line-height: 22px;
+    text-align: left;
+    font-family: system-ui;
+    font-variation-settings: "wght" 400;
+}
+.item .icon {   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: 16px; 
+}
+.icon [basics-css-icon], .indicator [basics-css-icon] {    
+    --size: 1.125em;
+    height: var(--size);
+    width: var(--size);
+    vertical-align: text-top; 
+    display: inline-block;
+    background-color: var(--mask,invalid) #fff;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.icon [basics-css-icon] {
+    --size : 20px;
+}
+.separator {
+    height: 8px;
+    width: 100%;
+    background: #212121;
+} 
+.dropdownWrapper {    
+    position: relative;
+    height: var(--item-height);
+    z-index: 1;
+}
+.dropdownWrapper:has([data-state=closed]) {
+    z-index : 0;
+}
+.dropdown {    
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    transition: var(--transition);
+    transition-property: transform,filter;
+}
+.dropdown > .item {
+    pointer-events: all;
+}
+.dropdown .item {
+    cursor: pointer;
+    transition: border-radius var(--transition),background var(--transition);
+}
+.dropdown:where([data-state=open]) > .item {    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.dropdown .item .indicator {    
+    transform-origin: center;
+    transition: transform var(--transition);
+}
+.item .indicator [basics-css-icon] {
+    --size : 16px;
+}
+.dropdownWrapper .dropdown:where([data-state=open]) .dropdownContent {    
+    visibility: visible;
+    -webkit-clip-path: inset(0 0 0 0 round 0 0 10px 10px);
+    clip-path: inset(0 0 0 0 round 0 0 10px 10px);
+}
+.dropdown .dropdownContent {    
+    border-top: 1px solid #464648;
+    -webkit-clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 0 100% 0);
+    transition: -webkit-clip-path var(--transition);
+    transition: clip-path var(--transition);
+    transition: clip-path var(--transition),-webkit-clip-path var(--transition);
+}
+.root:where(:has(.dropdown[data-state=open])) {
+    --transition : var(--transition-in);
+    transform : scale(var(--scale-amount))
+}
+.root:after {    
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(32,32,30,.6);
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+}
+.root:where(:has(.dropdown[data-state=open])):after {
+    opacity: 1;
+    pointer-events: all;
+}
+.dropdown:where([data-state=open]) > .item .indicator {
+    transform : rotate(90deg);
+}
+.item + .item {
+    border-top : 1px solid #464648;
+}
+.dropdown:where([data-state=open]) {    
+    transform: scale(calc(1 / var(--scale-amount))) translateY(-8px);
+    pointer-events: all;
+    filter: drop-shadow(0 4px 12px rgba(24,24,24,.2));
+}
